@@ -1,0 +1,36 @@
+{% with current=request.resolver_match.url_name %}
+<nav class="navbar navbar-fixed-top navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="#page-top">
+                <span>[PHOTO]</span>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="menu">
+            <ul class="nav navbar-nav">
+                <li class="{% if current == 'index' %}active{% endif %} lien"><a href="{% url 'index' %}"><i class="fa fa-home sr-icons"></i> Home</a></li>
+                <li class="{% if current == 'about' %}active{% endif %} lien"><a href="{% url 'about' %}"><i class="fa fa-bookmark sr-icons"></i> About</a></li>
+                <li class="{% if current == 'blog' %}active{% endif %} lien"><a href="{% url 'blog' %}"><i class="fa fa-file-text sr-icons"></i> Blog</a></li>
+                <li class="{% if current == 'contact' %}active{% endif %} lien"><a href="{% url 'contact' %}"><i class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+                {% if user.is_authenticated %}
+                <li>
+                    {# Django 5 exige POST para cerrar sesión #}
+                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:none">{% csrf_token %}</form>
+                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"><i class="fa fa-sign-out sr-icons"></i> {{ user.email }} - Logout</a>
+                </li>
+                <li><a href="{% url 'new_post' %}"><i class="fa fa-plus-square sr-icons"></i> New post</a></li>
+                {% else %}
+                <li class="{% if current == 'login' %}active{% endif %} lien"><a href="{% url 'login' %}"><i class="fa fa-sign-in sr-icons"></i> Login</a></li>
+                <li class="{% if current == 'register' %}active{% endif %}"><a href="{% url 'register' %}"><i class="fa fa-user-secret sr-icons"></i> Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endwith %}

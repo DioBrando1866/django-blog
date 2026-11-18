@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}New Post{% endblock %}
+
+{% block body %}
+<div id="new-post">
+    <div class="container">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+            <h1>New Post</h1>
+
+            <form method="post" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                {% include 'partials/_field.html' with field=form.title %}
+                {% include 'partials/_field.html' with field=form.content %}
+                {% include 'partials/_field.html' with field=form.image %}
+
+                <hr class="divider">
+
+                <div class="form-group text-right">
+                    <button type="submit" class="btn btn-default">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

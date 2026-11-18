@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
+<div id="login">
+    <div class="container">
+        {% if form.errors %}
+        <div class="alert alert-danger">Invalid credentials. Please check your email and password.</div>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <div class="mb-3">You are logged in as {{ user.email }}.</div>
+        {% endif %}
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <label for="id_username">Email:</label>
+            <input type="email" id="id_username" name="username" value="{{ form.username.value|default:'' }}"
+                class="form-control" autocomplete="username" required autofocus />
+            <label for="id_password">Password:</label>
+            <input type="password" id="id_password" name="password" class="form-control"
+                autocomplete="current-password" required />
+            <input type="hidden" name="next" value="{{ next }}">
+            <button class="pull-right btn btn-lg sr-button" type="submit">Sign in</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

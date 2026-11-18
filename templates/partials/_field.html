@@ -1,0 +1,10 @@
+{# Campo de formulario con etiqueta y errores. Uso: {% include 'partials/_field.html' with field=form.email %} #}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    {% if field.field.widget.input_type == 'checkbox' %}
+    <label for="{{ field.id_for_label }}">{{ field }} {{ field.label }}</label>
+    {% else %}
+    {{ field.label_tag }}
+    {{ field }}
+    {% endif %}
+    {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
+</div>

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Blog{% endblock %}
+
+{% block body %}
+<div id="blog" class="container">
+    <header class="page-header-block">
+        <span class="eyebrow">Journal</span>
+        {% if search_term %}
+        <h1>Results for “{{ search_term }}”</h1>
+        {% else %}
+        <h1>Blog</h1>
+        {% endif %}
+    </header>
+
+    <div class="row">
+        <!-- Posts -->
+        <div class="col-xs-12 col-md-8">
+            <div id="post-list">
+                {% if total > 0 %}
+                <div class="results-bar glass" role="status">
+                    <span class="results-count">
+                        <i class="fa fa-file-text-o"></i>
+                        Mostrando <strong>{{ posts|length }}</strong> de <strong>{{ total }}</strong>
+                        {% if total == 1 %}post{% else %}posts{% endif %}
+                    </span>
+                    <span class="results-page">Página {{ page_obj.number }} <span class="results-sep">/</span> {{ total_pages }}</span>
+                    <span class="results-progress" aria-hidden="true">
+                        <span style="--value: {{ progress }}%"></span>
+                    </span>
+                </div>
+
+                {% for post in posts %}
+                {% include 'partials/_post.html' %}
+                {% endfor %}
+
+                {% include 'partials/_paginador.html' %}
+                {% else %}
+                <div class="card empty-state text-center">
+                    <i class="fa fa-search fa-2x"></i>
+                    <p>No posts found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="col-xs-12 col-md-4 sidebar">
+            <form id="search-form" class="input-pill" action="{% url 'blog' %}" role="search">
+                <div class="input-group">
+                    <input type="search" class="form-control" placeholder="Search posts…" name="searchTerm"
+                        value="{{ search_term }}" aria-label="Search posts">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-icon btn-primary" aria-label="Search"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </form>
+
+            <div class="card card-sm panel" data-reveal>
+                <div class="panel-heading"><h4>Categories</h4></div>
+                <div class="panel-body">
+                    <ul class="link-list nav">
+                        <li><a href="#">Category I</a></li>
+                        <li><a href="#">Category II</a></li>
+                        <li><a href="#">Category III</a></li>
+                        <li><a href="#">Category IV</a></li>
+                        <li><a href="#">Category V</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card card-sm glass well" data-reveal>
+                <h4>Soluta</h4>
+                <p class="text-muted" style="margin:0">Quod soluta corrupti earum officia vel inventore vitae quidem, consequuntur odit impedit.</p>
+            </div>
+
+            <div class="card card-sm" data-reveal>
+                <h4>Recent posts</h4>
+                {% for recent in recents %}
+                {% include 'partials/_recent_post.html' %}
+                {% empty %}
+                <p class="text-muted" style="margin:0">No recent posts yet.</p>
+                {% endfor %}
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

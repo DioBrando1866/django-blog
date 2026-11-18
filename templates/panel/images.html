@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Images{% endblock %}
+{% block body %}
+<div id="images">
+    <div class="container">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+            <h1>Images</h1>
+            <form method="post" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% include 'partials/_field.html' with field=form.file %}
+                {% include 'partials/_field.html' with field=form.num_likes %}
+                {% include 'partials/_field.html' with field=form.num_views %}
+                {% include 'partials/_field.html' with field=form.num_downloads %}
+                {% include 'partials/_field.html' with field=form.category %}
+                <button type="submit" class="pull-right btn btn-lg sr-button">Send</button>
+            </form>
+            <hr class="divider">
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr><th>#</th><th>File</th><th>Views</th><th>Likes</th><th>Downloads</th><th>Category</th></tr>
+                </thead>
+                <tbody>
+                    {% for image in images %}
+                    <tr>
+                        <th scope="row">{{ image.id }}</th>
+                        <td><img src="{{ image.file.url }}" alt="" style="width: 120px; height: auto;"></td>
+                        <td>{{ image.num_views }}</td>
+                        <td>{{ image.num_likes }}</td>
+                        <td>{{ image.num_downloads }}</td>
+                        <td>{{ image.category.name|default:"" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

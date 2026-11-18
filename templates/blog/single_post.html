@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body %}
+<div id="single">
+    <div class="container">
+
+        <!-- Full Article -->
+        <div class="row">
+            <h2>{{ post.title }}</h2>
+            <hr class="subtitle">
+            <div class="block1">
+                <div class="col-xs-12 col-sm-9">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" class="img-responsive" alt="">
+                    {% endif %}
+
+                    {# linebreaks escapa el HTML: en Symfony se usaba |raw (riesgo de XSS) #}
+                    {{ post.content|linebreaks }}
+
+                    <h4>By {{ post.post_user.name }}</h4>
+                    <hr>
+                    <ul class="list-inline">
+                        <li>{{ post.published_at|date:"d F" }} |</li>
+                        <li><a class="page-scroll" href="#form">COMMENT</a> <i class="fa fa-comments sr-icons"></i>
+                            {{ post.num_comments }} |</li>
+                        <li><a id="like-link" href="#" data-url="{% url 'post_like' post.slug %}">LIKE</a>
+                            <i class="fa fa-heart sr-icons"></i><span id="likes"> {{ post.num_likes }}</span></li>
+                    </ul>
+                </div>
+
+                <div class="col-xs-12 col-sm-3">
+                    <h4>Recent Post</h4>
+                    {% for recent in recents %}
+                    {% include 'partials/_recent_post.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="row" style="margin-top: 40px;">
+            <div class="col-xs-12 col-sm-9">
+                <h4>Recent Comment</h4>
+                <hr>
+                {% for comment in recent_comments %}
+                {% include 'partials/_recent_comment.html' %}
+                {% endfor %}
+
+                <div style="margin-top: 40px;">
+                    <div id="form" class="col-xs-12 col-sm-6 col-sm-push-3">
+                        <form method="post" class="form-horizontal" novalidate>
+                            {% csrf_token %}
+                            {{ comment_form.non_field_errors }}
+                            {% include 'partials/_field.html' with field=comment_form.name %}
+                            {% include 'partials/_field.html' with field=comment_form.email %}
+                            {% include 'partials/_field.html' with field=comment_form.text %}
+                            <button type="submit" class="pull-right btn btn-lg sr-button">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        const likeLink = document.getElementById('like-link');
+        const likesSpan = document.getElementById('likes');
+        if (!likeLink) return;
+
+        likeLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            fetch(likeLink.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        likesSpan.textContent = ' ' + data.likes;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+<div>
+    <hr>
+    <a href="{{ recent.get_absolute_url }}">{{ recent.title }}</a>
+    <h5> By <span>{{ recent.post_user.name }}</span></h5>
+    <p>{{ recent.published_at|date:"d F" }}</p>
+    <p><i class="fa fa-clock-o sr-icons"></i> {{ recent.published_at|date:"h A" }}</p>
+</div>

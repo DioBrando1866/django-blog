@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Categories{% endblock %}
+{% block body %}
+<div id="categories">
+    <div class="container">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+            <h1>Categories</h1>
+            <form method="post" class="form-horizontal" novalidate>
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% include 'partials/_field.html' with field=form.name %}
+                <button type="submit" class="btn btn-default">Send</button>
+            </form>
+            <hr class="divider">
+            <table class="table">
+                <thead>
+                    <tr><th scope="col">#</th><th scope="col">Name</th></tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                    <tr>
+                        <th scope="row">{{ category.id }}</th>
+                        <td>{{ category.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
